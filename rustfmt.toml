@@ -1,0 +1,35 @@
+# https://github.com/rust-lang-nursery/rustfmt/blob/master/src/config.rs
+
+# Stable
+unstable_features = true
+edition = "2018"
+max_width = 400
+tab_spaces = 2
+match_block_trailing_comma = true
+use_try_shorthand = true
+binop_separator = "Front"
+use_small_heuristics = "Max"
+fn_args_layout = "Compressed"
+newline_style = "Unix"
+use_field_init_shorthand = true
+match_arm_leading_pipes = "Never"
+
+# Nightly
+indent_style = "Visual"
+imports_indent = "Visual"
+imports_granularity = "Crate"
+wrap_comments = true
+normalize_comments = true
+format_code_in_doc_comments = true
+reorder_impl_items = true
+fn_single_line = true
+where_single_line = true
+brace_style = "PreferSameLine"
+trailing_comma = "Vertical"
+trailing_semicolon = true
+type_punctuation_density = "Compressed"
+overflow_delimited_expr = true
+condense_wildcard_suffixes = true
+enum_discrim_align_threshold = 20
+struct_field_align_threshold = 20
+struct_lit_single_line = true

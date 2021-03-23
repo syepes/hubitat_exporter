@@ -1,0 +1,10 @@
+.idea
+*.iml
+.vscode
+*.swp
+*~
+**/.DS_Store
+*.local
+*.local.*
+temp/
+/target
