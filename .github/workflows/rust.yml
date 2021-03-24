@@ -13,23 +13,15 @@ env:
 
 jobs:
   build:
-    name: Build - ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.toolchain }} / ${{ matrix.triple.target }}
+    runs-on: ${{ matrix.triple.os }}
     strategy:
+      fail-fast: false
       matrix:
-        build: [ubuntu-x86, ubuntu-arm]
-        include:
-          - build: ubuntu-x86
-            os: ubuntu-latest
-            TARGET: x86_64-unknown-linux-gnu
-            COMPILER: gcc
-            LINKER: gcc
-
-          - build: ubuntu-arm
-            os: ubuntu-latest
-            TARGET: armv7-unknown-linux-gnueabihf
-            COMPILER: arm-linux-gnueabihf-gcc-5
-            LINKER: gcc-5-arm-linux-gnueabihf
+        triple:
+          - {os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", cross: false}
+          - {os: "ubuntu-latest", target: "armv7-unknown-linux-gnueabihf", cross: true}
+          - {os: "ubuntu-latest", target: "aarch64-unknown-linux-gnu", cross: true}
 
     steps:
       - name: Checkout
@@ -53,6 +45,8 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
+          args: --target=${{ matrix.triple.target }}
+          use-cross: ${{ matrix.triple.cross }}
 
       - name: Format
         uses: actions-rs/cargo@v1
@@ -70,3 +64,5 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build --release
+          args: --target=${{ matrix.triple.target }}
+          use-cross: ${{ matrix.triple.cross }}
