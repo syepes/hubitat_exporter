@@ -1,0 +1,67 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build: [ubuntu-x86, ubuntu-arm]
+        include:
+          - build: ubuntu-x86
+            os: ubuntu-latest
+            TARGET: x86_64-unknown-linux-gnu
+            COMPILER: gcc
+            LINKER: gcc
+
+          - build: ubuntu-arm
+            os: ubuntu-latest
+            TARGET: armv7-unknown-linux-gnueabihf
+            COMPILER: arm-linux-gnueabihf-gcc-5
+            LINKER: gcc-5-arm-linux-gnueabihf
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install components
+        run: rustup component add --toolchain stable rustfmt clippy
+
+      - name: Fetch
+        uses: actions-rs/cargo@v1
+        with:
+          command: fetch
+
+      - name: Check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+      - name: Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build --release
