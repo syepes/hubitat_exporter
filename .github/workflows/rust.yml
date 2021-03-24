@@ -33,6 +33,7 @@ jobs:
         with:
           profile: minimal
           toolchain: ${{ matrix.toolchain }}
+          target: ${{ matrix.triple.target }}
           components: rustfmt, clippy
           override: true
 
@@ -63,6 +64,6 @@ jobs:
       - name: Build
         uses: actions-rs/cargo@v1
         with:
-          command: build --release
-          args: --target=${{ matrix.triple.target }}
+          command: build
+          args: --target=${{ matrix.triple.target }} --release
           use-cross: ${{ matrix.triple.cross }}
