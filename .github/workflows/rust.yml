@@ -18,6 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        toolchain: [nightly]
         triple:
           - {os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", cross: false}
           - {os: "ubuntu-latest", target: "armv7-unknown-linux-gnueabihf", cross: true}
@@ -27,14 +28,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install stable
+      - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
           override: true
-
-      - name: Install components
-        run: rustup component add --toolchain stable rustfmt clippy
 
       - name: Fetch
         uses: actions-rs/cargo@v1
