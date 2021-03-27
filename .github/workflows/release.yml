@@ -1,0 +1,143 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_x86_64:
+    name: ${{ matrix.toolchain }} / ${{ matrix.triple.target }}
+    runs-on: ${{ matrix.triple.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: [nightly]
+        triple:
+          - {os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", cross: false}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          target: ${{ matrix.triple.target }}
+          override: true
+
+      - name: Fetch
+        uses: actions-rs/cargo@v1
+        with:
+          command: fetch
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --target=${{ matrix.triple.target }} --release --verbose
+          use-cross: ${{ matrix.triple.cross }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: linux/amd64
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Display structure
+        run: du -a --exclude='.git*'
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hubitat_exporter:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+  build_armv7:
+    name: ${{ matrix.toolchain }} / ${{ matrix.triple.target }}
+    runs-on: ${{ matrix.triple.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: [nightly]
+        triple:
+          - {os: "ubuntu-latest", target: "armv7-unknown-linux-gnueabihf", cross: true}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          target: ${{ matrix.triple.target }}
+          override: true
+
+      - name: Fetch
+        uses: actions-rs/cargo@v1
+        with:
+          command: fetch
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --target=${{ matrix.triple.target }} --release --verbose
+          use-cross: ${{ matrix.triple.cross }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: linux/arm/v7
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Display structure
+        run: du -a --exclude='.git*'
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm/v7
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hubitat_exporter:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}

@@ -9,4 +9,6 @@ ADD target/*/release/hubitat_exporter /hubitat_exporter
 
 WORKDIR /
 
-CMD ["hubitat_exporter"]
+EXPOSE 8000
+
+CMD ["/hubitat_exporter"]
