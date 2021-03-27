@@ -8,52 +8,38 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build_x86_64:
-    name: ${{ matrix.toolchain }} / ${{ matrix.triple.target }}
-    runs-on: ${{ matrix.triple.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        toolchain: [nightly]
-        triple:
-          - {os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", cross: false}
-
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1.12.0
         with:
-          profile: minimal
-          toolchain: ${{ matrix.toolchain }}
-          target: ${{ matrix.triple.target }}
-          override: true
-
-      - name: Fetch
-        uses: actions-rs/cargo@v1
-        with:
-          command: fetch
-
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --target=${{ matrix.triple.target }} --release --verbose
-          use-cross: ${{ matrix.triple.cross }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/hubitat_exporter
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v1.0.1
         with:
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
 
       - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1.1.1
         id: buildx
-        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2.1.4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v1.8.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -63,81 +49,22 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.3.0
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hubitat_exporter:latest
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-
-  build_armv7:
-    name: ${{ matrix.toolchain }} / ${{ matrix.triple.target }}
-    runs-on: ${{ matrix.triple.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        toolchain: [nightly]
-        triple:
-          - {os: "ubuntu-latest", target: "armv7-unknown-linux-gnueabihf", cross: true}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.toolchain }}
-          target: ${{ matrix.triple.target }}
-          override: true
-
-      - name: Fetch
-        uses: actions-rs/cargo@v1
-        with:
-          command: fetch
-
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --target=${{ matrix.triple.target }} --release --verbose
-          use-cross: ${{ matrix.triple.cross }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: linux/arm/v7
-
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Display structure
-        run: du -a --exclude='.git*'
-
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./Dockerfile
-          platforms: linux/arm/v7
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hubitat_exporter:latest
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
