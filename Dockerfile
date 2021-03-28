@@ -18,7 +18,7 @@ COPY --from=vendor /app/vendor vendor
 COPY ./Cargo.toml .
 COPY ./Cargo.lock .
 COPY ./src src
-RUN cargo build --release --verbose
+RUN cargo build --release
 
 FROM debian:buster-slim
 WORKDIR /
@@ -26,4 +26,4 @@ ENV RUST_BACKTRACE=true
 COPY --from=builder /app/target/release/hubitat_exporter /hubitat_exporter
 
 EXPOSE 8000
-CMD ["/hubitat_exporter"]
+ENTRYPOINT ["/hubitat_exporter"]

@@ -2,7 +2,7 @@
 name = "hubitat_exporter"
 version = "0.1.0"
 authors = ["Sebastian YEPES <syepes@gmail.com>"]
-description = "Hubitat Elevation Device Attribute Exporter"
+description = "Hubitat Elevation Device Attribute Prometheus Exporter"
 license = "Apache-2.0"
 repository = "https://github.com/syepes/hubitat_exporter/"
 keywords = ["home-automation", "prometheus-exporter", "hubitat"]
