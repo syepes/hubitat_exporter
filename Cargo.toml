@@ -7,6 +7,7 @@ license = "Apache-2.0"
 repository = "https://github.com/syepes/hubitat_exporter/"
 keywords = ["home-automation", "prometheus-exporter", "hubitat"]
 edition = "2018"
+resolver = "2"
 
 [dependencies]
 clippy = { version = "*" }
@@ -23,6 +24,9 @@ url = "2.*"
 log = "*"
 env_logger = "*"
 chrono = "*"
+
+[profile.dev]
+split-debuginfo = "unpacked"
 
 [profile.release]
 opt-level = 3

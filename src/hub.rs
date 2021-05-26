@@ -337,7 +337,13 @@ impl DeviceAttribute {
           Some("0".to_string())
         }
       },
-      Self { ref data_type, current_value, .. } if data_type == "NUMBER" => Some(current_value.to_string()),
+      Self { ref data_type, current_value, .. } if data_type == "NUMBER" => {
+        if current_value != "" {
+          Some(current_value.to_string())
+        } else {
+          None
+        }
+      },
       Self { ref current_value, .. } if current_value == "on" => {
         if current_value == "on" {
           Some("1".to_string())

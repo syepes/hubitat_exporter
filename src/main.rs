@@ -18,8 +18,6 @@ use convert_case::{Case, Casing};
 use reqwest::blocking::RequestBuilder;
 
 fn main() {
-  env_logger::Builder::new().format(|buf, record| writeln!(buf, "{} {}:{} [{}] - {}", chrono::Local::now().format("%Y-%m-%dT%H:%M:%S"), record.file().unwrap_or("unknown"), record.line().unwrap_or(0), record.level(), record.args())).filter(None, LevelFilter::Warn).init();
-
   let app = App::new("").version(env!("CARGO_PKG_VERSION"))
                         .author(env!("CARGO_PKG_AUTHORS"))
                         .about(env!("CARGO_PKG_DESCRIPTION"))
@@ -30,7 +28,16 @@ fn main() {
                         .arg(Arg::with_name("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false))
                         .arg(Arg::with_name("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false))
                         .arg(Arg::with_name("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false))
+                        .arg(Arg::with_name("v").short('v').multiple(true).required(false))
                         .get_matches();
+
+  match app.occurrences_of("v") {
+    0 | 1 => std::env::set_var("RUST_LOG", "error"),
+    2 => std::env::set_var("RUST_LOG", "error"),
+    _ => std::env::set_var("RUST_LOG", "trace"),
+  }
+
+  env_logger::Builder::new().format(|buf, record| writeln!(buf, "{} {}:{} [{}] - {}", chrono::Local::now().format("%Y-%m-%dT%H:%M:%S"), record.file().unwrap_or("unknown"), record.line().unwrap_or(0), record.level(), record.args())).filter(None, LevelFilter::Warn).init();
 
   let mut he = hub::HubInfo { ip: app.value_of("he_ip"), auth_usr: None, auth_pwd: None, api_id: app.value_of("he_api_id"), api_access_token: app.value_of("he_api_token"), client: None };
 
