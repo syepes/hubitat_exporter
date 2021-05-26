@@ -338,7 +338,7 @@ impl DeviceAttribute {
         }
       },
       Self { ref data_type, current_value, .. } if data_type == "NUMBER" => {
-        if current_value != "" {
+        if !current_value.is_empty() {
           Some(current_value.to_string())
         } else {
           None
