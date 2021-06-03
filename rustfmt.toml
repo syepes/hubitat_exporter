@@ -1,9 +1,9 @@
-# https://github.com/rust-lang-nursery/rustfmt/blob/master/src/config.rs
+# # https://github.com/rust-lang-nursery/rustfmt/blob/master/src/config.rs
 
 # Stable
 unstable_features = true
 edition = "2018"
-max_width = 400
+max_width = 600
 tab_spaces = 2
 match_block_trailing_comma = true
 use_try_shorthand = true
@@ -14,12 +14,13 @@ newline_style = "Unix"
 use_field_init_shorthand = true
 match_arm_leading_pipes = "Never"
 
-# Nightly
+# # Nightly
+force_multiline_blocks = true
 indent_style = "Visual"
-imports_indent = "Visual"
+imports_indent = "Block"
 imports_granularity = "Crate"
-wrap_comments = true
-normalize_comments = true
+wrap_comments = false
+normalize_comments = false
 format_code_in_doc_comments = true
 reorder_impl_items = true
 fn_single_line = true
