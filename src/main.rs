@@ -76,16 +76,7 @@ fn build_metrics(devs: Result<Vec<hub::Device>, anyhow::Error>, dev_inv: &Option
             // Detailed mode without the Device Inventory
             for a in i.attributes.iter() {
               if let Some(v) = a.get_numeric_value() {
-                let m = &format!("{metric}{{hub_name=\"{hub_name}\",hub_location_name=\"{hub_location_name}\",device_network_id=\"{device_network_id}\",device_driver_type=\"{device_driver_type}\",device_driver=\"{device_driver}\",device_name=\"{device_name}\",device_label=\"{device_label}\"}} {val}\n",
-                                 metric = a.name.to_case(Case::Snake),
-                                 hub_name = d.hub_name,
-                                 hub_location_name = d.location_name,
-                                 device_network_id = d.device_network_id,
-                                 device_driver_type = i.r#type,
-                                 device_driver = d.device_type_name,
-                                 device_name = i.name,
-                                 device_label = i.label,
-                                 val = v);
+                let m = &format!("{metric}{{hub_name=\"{hub_name}\",hub_location_name=\"{hub_location_name}\",device_network_id=\"{device_network_id}\",device_driver_type=\"{device_driver_type}\",device_driver=\"{device_driver}\",device_name=\"{device_name}\",device_label=\"{device_label}\"}} {val}\n", metric = a.name.to_case(Case::Snake), hub_name = d.hub_name, hub_location_name = d.location_name, device_network_id = d.device_network_id, device_driver_type = i.r#type, device_driver = d.device_type_name, device_name = i.name, device_label = i.label, val = v);
                 metrics.push_str(m);
               }
             }
