@@ -99,245 +99,385 @@ pub struct DeviceAttribute {
 impl DeviceAttribute {
   pub fn get_numeric_value(&self) -> Option<String> {
     match self {
-      Self { ref name, current_value, .. } if name == "acceleration" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "acceleration" =>
+      {
         if current_value == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "alarm" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "alarm" =>
+      {
         if current_value == "off" || current_value == "inactive" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "presence" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "presence" =>
+      {
         if current_value == "present" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "presence" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "presence" =>
+      {
         if current_value == "present" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "switch" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "switch" =>
+      {
         if current_value == "on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "button" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "button" =>
+      {
         if current_value == "pushed" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "carbonMonoxide" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "carbonMonoxide" =>
+      {
         if current_value == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "status" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "status" =>
+      {
         if current_value == "playing" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "consumableStatus" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "consumableStatus" =>
+      {
         if current_value == "good" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "contact" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "contact" =>
+      {
         if current_value == "closed" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "indicatorStatus" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "indicatorStatus" =>
+      {
         if current_value == "when on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "lock" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "lock" =>
+      {
         if current_value == "locked" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "motion" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "motion" =>
+      {
         if current_value == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "shock" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "shock" =>
+      {
         if current_value == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "mute" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "mute" =>
+      {
         if current_value == "muted" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "sleeping" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "sleeping" =>
+      {
         if current_value == "sleeping" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "smoke" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "smoke" =>
+      {
         if current_value == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "sound" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "sound" =>
+      {
         if current_value == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "tamper" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "tamper" =>
+      {
         if current_value == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "thermostatMode" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "thermostatMode" =>
+      {
         if current_value == "off" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "thermostatFanMode" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "thermostatFanMode" =>
+      {
         if current_value == "off" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "thermostatOperatingState" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "thermostatOperatingState" =>
+      {
         if current_value == "heating" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "thermostatSetpointMode" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "thermostatSetpointMode" =>
+      {
         if current_value == "followSchedule" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "timedSession" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "timedSession" =>
+      {
         if current_value == "running" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "touch" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "touch" =>
+      {
         if current_value == "touched" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "valve" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "valve" =>
+      {
         if current_value == "open" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "camera" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "camera" =>
+      {
         if current_value == "on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "water" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "water" =>
+      {
         if current_value == "wet" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "windowShade" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "windowShade" =>
+      {
         if current_value == "opening" || current_value == "partially open" || current_value == "open" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "optimisation" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "optimisation" =>
+      {
         if current_value == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "windowFunction" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "windowFunction" =>
+      {
         if current_value == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "rain" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "rain" =>
+      {
         if current_value == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "rainHeavy" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "rainHeavy" =>
+      {
         if current_value == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref name, current_value, .. } if name == "heatAlarm" => {
+      Self { ref name,
+             current_value,
+             .. }
+        if name == "heatAlarm" =>
+      {
         if current_value == "overheat" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
         }
       },
-      Self { ref data_type, current_value, .. } if data_type == "NUMBER" => {
+      Self { ref data_type,
+             current_value,
+             .. }
+        if data_type == "NUMBER" =>
+      {
         if !current_value.is_empty() {
           Some(current_value.to_string())
         } else {
