@@ -1,31 +1,48 @@
 [package]
 name = "hubitat_exporter"
-version = "0.1.0"
+version = "0.1.5"
+edition = "2021"
 authors = ["Sebastian YEPES <syepes@gmail.com>"]
-description = "Hubitat Elevation Device Attribute Prometheus Exporter"
-license = "Apache-2.0"
-repository = "https://github.com/syepes/hubitat_exporter/"
 keywords = ["home-automation", "prometheus-exporter", "hubitat"]
-edition = "2018"
-resolver = "2"
+license = "Apache-2.0"
+description = "Hubitat Elevation Device Attribute Prometheus Exporter"
+homepage = "https://github.com/syepes/hubitat_exporter/"
+repository = "https://github.com/syepes/hubitat_exporter/"
+readme = "README.md"
+
 
 [dependencies]
-clippy = { version = "*" }
-reqwest = { version = "0.11.*", features = ["blocking","json", "cookies", "multipart"] }
-tokio = { version = "1.6.*", features = ["full"] }
+reqwest = { version = "0.11.*", features = [
+  "blocking",
+  "json",
+  "cookies",
+  "multipart",
+] }
+tokio = { version = "1.17.*", features = ["full"] }
 serde = { version = "1.0.*", features = ["derive"] }
 serde_json = { version = "1.0.*", features = ["raw_value"] }
 anyhow = "1.0.*"
-tiny_http = "0.8.*"
-convert_case = "0.4.*"
+tiny_http = "0.11.*"
+convert_case = "0.5.*"
 openssl = { version = "0.10.*", features = ["vendored"] }
-clap-v3 = { git = "https://github.com/poma/clap/", default-features = false, features = ["std", "cargo"] }
+clap-v3 = { git = "https://github.com/poma/clap/", default-features = false, features = [
+  "std",
+  "cargo",
+] }
 url = "2.*"
-log = "*"
-env_logger = "*"
-chrono = "*"
+log = "0.4.*"
+env_logger = "0.9.*"
+chrono = "0.4.*"
+
+[dev-dependencies]
+clippy = { version = "*" }
 
 [profile.dev]
+debug = 0
+split-debuginfo = "unpacked"
+
+[profile.test]
+debug = 0
 split-debuginfo = "unpacked"
 
 [profile.release]

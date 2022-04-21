@@ -20,14 +20,14 @@ fn main() {
   let app = App::new("").version(env!("CARGO_PKG_VERSION"))
                         .author(env!("CARGO_PKG_AUTHORS"))
                         .about(env!("CARGO_PKG_DESCRIPTION"))
-                        .arg(Arg::with_name("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000"))
-                        .arg(Arg::with_name("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true))
-                        .arg(Arg::with_name("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true))
-                        .arg(Arg::with_name("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true))
-                        .arg(Arg::with_name("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false))
-                        .arg(Arg::with_name("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false))
-                        .arg(Arg::with_name("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false))
-                        .arg(Arg::with_name("v").short('v').multiple(true).takes_value(false).required(false))
+                        .arg(Arg::with_name("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000").takes_value(true))
+                        .arg(Arg::with_name("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).takes_value(true))
+                        .arg(Arg::with_name("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).takes_value(true))
+                        .arg(Arg::with_name("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).takes_value(true))
+                        .arg(Arg::with_name("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false).takes_value(true))
+                        .arg(Arg::with_name("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).takes_value(true))
+                        .arg(Arg::with_name("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).takes_value(true))
+                        .arg(Arg::with_name("v").short('v').multiple_occurrences(true).takes_value(false).required(false))
                         .get_matches();
 
   match app.occurrences_of("v") {
@@ -35,7 +35,8 @@ fn main() {
     1 => std::env::set_var("RUST_LOG", "warn"),
     2 => std::env::set_var("RUST_LOG", "info"),
     3 => std::env::set_var("RUST_LOG", "debug"),
-    4 | _ => std::env::set_var("RUST_LOG", "trace"),
+    4 => std::env::set_var("RUST_LOG", "trace"),
+    _ => std::env::set_var("RUST_LOG", "trace"),
   }
 
   env_logger::Builder::from_default_env().format(|buf, record| writeln!(buf, "{} {} {}:{} [{}] - {}", chrono::Local::now().format("%Y-%m-%dT%H:%M:%S"), record.module_path().unwrap_or("unknown"), record.file().unwrap_or("unknown"), record.line().unwrap_or(0), record.level(), record.args())).init();
@@ -107,17 +108,16 @@ fn get_log(he: &mut hub::HubInfo, app: &ArgMatches) {
   if let Ok(c) = reqwest::blocking::Client::builder().user_agent(env!("CARGO_PKG_NAME")).cookie_store(true).danger_accept_invalid_certs(true).connection_verbose(true).build() {
     let req_url = format!("http://{he_ip}/login", he_ip = he.ip.unwrap());
 
-    let req: RequestBuilder;
-    if app.is_present("he_auth_usr") && app.is_present("he_auth_pwd") {
+    let req: RequestBuilder = if app.is_present("he_auth_usr") && app.is_present("he_auth_pwd") {
       debug!("Auth on {:?}/{:?}", app.value_of("he_auth_usr"), app.value_of("he_auth_pwd"));
 
       let mut params = HashMap::new();
       params.insert("username", app.value_of("he_auth_usr").unwrap().to_string());
       params.insert("password", app.value_of("he_auth_pwd").unwrap().to_string());
-      req = c.post(req_url).form(&params);
+      c.post(req_url).form(&params)
     } else {
-      req = c.post(req_url);
-    }
+      c.post(req_url)
+    };
 
     match req.send() {
       Ok(r) => {
