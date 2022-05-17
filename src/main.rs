@@ -6,8 +6,8 @@ use std::{collections::HashMap, io::Write};
 extern crate log;
 extern crate env_logger;
 
-extern crate clap_v3;
-use clap_v3::{App, Arg, ArgMatches};
+extern crate clap;
+use clap::{Arg, ArgMatches, Command};
 
 extern crate tiny_http;
 use tiny_http::{Response, Server};
@@ -17,18 +17,18 @@ use convert_case::{Case, Casing};
 use reqwest::blocking::RequestBuilder;
 
 fn main() {
-  let app = App::new("").version(env!("CARGO_PKG_VERSION"))
-                        .author(env!("CARGO_PKG_AUTHORS"))
-                        .about(env!("CARGO_PKG_DESCRIPTION"))
-                        .arg(Arg::with_name("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000").takes_value(true))
-                        .arg(Arg::with_name("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).takes_value(true))
-                        .arg(Arg::with_name("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).takes_value(true))
-                        .arg(Arg::with_name("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).takes_value(true))
-                        .arg(Arg::with_name("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false).takes_value(true))
-                        .arg(Arg::with_name("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).takes_value(true))
-                        .arg(Arg::with_name("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).takes_value(true))
-                        .arg(Arg::with_name("v").short('v').multiple_occurrences(true).takes_value(false).required(false))
-                        .get_matches();
+  let app = Command::new("").version(env!("CARGO_PKG_VERSION"))
+                            .author(env!("CARGO_PKG_AUTHORS"))
+                            .about(env!("CARGO_PKG_DESCRIPTION"))
+                            .arg(Arg::new("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000").takes_value(true))
+                            .arg(Arg::new("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).takes_value(true))
+                            .arg(Arg::new("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).takes_value(true))
+                            .arg(Arg::new("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).takes_value(true))
+                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false).takes_value(true))
+                            .arg(Arg::new("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).takes_value(true))
+                            .arg(Arg::new("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).takes_value(true))
+                            .arg(Arg::new("v").short('v').multiple_occurrences(true).takes_value(false).required(false))
+                            .get_matches();
 
   match app.occurrences_of("v") {
     0 => std::env::set_var("RUST_LOG", "error"),
