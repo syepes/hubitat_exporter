@@ -18,7 +18,7 @@ COPY --from=vendor /app/vendor vendor
 COPY ./Cargo.toml .
 COPY ./Cargo.lock .
 COPY ./src src
-RUN cargo +nightly build --release
+RUN cargo build --release
 
 FROM debian:buster-slim
 WORKDIR /
