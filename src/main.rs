@@ -20,17 +20,17 @@ fn main() {
   let app = Command::new("").version(env!("CARGO_PKG_VERSION"))
                             .author(env!("CARGO_PKG_AUTHORS"))
                             .about(env!("CARGO_PKG_DESCRIPTION"))
-                            .arg(Arg::new("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000").takes_value(true))
-                            .arg(Arg::new("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).takes_value(true))
-                            .arg(Arg::new("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).takes_value(true))
-                            .arg(Arg::new("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).takes_value(true))
-                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false).takes_value(true))
-                            .arg(Arg::new("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).takes_value(true))
-                            .arg(Arg::new("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).takes_value(true))
-                            .arg(Arg::new("v").short('v').multiple_occurrences(true).takes_value(false).required(false))
+                            .arg(Arg::new("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000").num_args(1))
+                            .arg(Arg::new("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).num_args(1))
+                            .arg(Arg::new("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).num_args(1))
+                            .arg(Arg::new("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).num_args(1))
+                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false).num_args(1))
+                            .arg(Arg::new("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).num_args(1))
+                            .arg(Arg::new("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).num_args(1))
+                            .arg(Arg::new("v").short('v').action(clap::ArgAction::Count).required(false).help("Log verbosity (-v, -vv, -vvv...)"))
                             .get_matches();
 
-  match app.occurrences_of("v") {
+  match app.get_one::<u8>("v").unwrap() {
     0 => std::env::set_var("RUST_LOG", "error"),
     1 => std::env::set_var("RUST_LOG", "warn"),
     2 => std::env::set_var("RUST_LOG", "info"),
@@ -41,12 +41,13 @@ fn main() {
 
   env_logger::Builder::from_default_env().format(|buf, record| writeln!(buf, "{} {} {}:{} [{}] - {}", chrono::Local::now().format("%Y-%m-%dT%H:%M:%S"), record.module_path().unwrap_or("unknown"), record.file().unwrap_or("unknown"), record.line().unwrap_or(0), record.level(), record.args())).init();
 
-  let mut he = hub::HubInfo { ip: app.value_of("he_ip"), auth_usr: None, auth_pwd: None, api_id: app.value_of("he_api_id"), api_access_token: app.value_of("he_api_token"), client: None };
+  let mut he = hub::HubInfo { ip: app.get_one::<String>("he_ip").map(|s| s.as_str()), auth_usr: None, auth_pwd: None, api_id: app.get_one::<String>("he_api_id").map(|s| s.as_str()), api_access_token: app.get_one::<String>("he_api_token").map(|s| s.as_str()), client: None };
 
-  if let Ok(server) = Server::http(app.value_of("listener").unwrap()) {
-    info!("started on http://{}", app.value_of("listener").unwrap());
+  let listener = app.get_one::<String>("listener").map(|s| s.as_str()).unwrap();
+  if let Ok(server) = Server::http(listener) {
+    info!("started on http://{:?}", listener);
 
-    if app.is_present("he_dd") {
+    if app.get_flag("he_dd") {
       info!("detailed mode is turned on");
       get_log(&mut he, &app);
     }
@@ -63,7 +64,7 @@ fn main() {
       let _ = request.respond(response);
     }
   } else {
-    error!("Starting web server with listener {:?}", app.value_of("listener"));
+    error!("Starting web server with listener {:?}", listener);
   }
 }
 
@@ -108,12 +109,12 @@ fn get_log(he: &mut hub::HubInfo, app: &ArgMatches) {
   if let Ok(c) = reqwest::blocking::Client::builder().user_agent(env!("CARGO_PKG_NAME")).cookie_store(true).danger_accept_invalid_certs(true).connection_verbose(true).build() {
     let req_url = format!("http://{he_ip}/login", he_ip = he.ip.unwrap());
 
-    let req: RequestBuilder = if app.is_present("he_auth_usr") && app.is_present("he_auth_pwd") {
-      debug!("Auth on {:?}/{:?}", app.value_of("he_auth_usr"), app.value_of("he_auth_pwd"));
+    let req: RequestBuilder = if app.get_flag("he_auth_usr") && app.get_flag("he_auth_pwd") {
+      debug!("Auth on {:?}/{:?}", app.get_one::<String>("he_auth_usr").map(|s| s.as_str()), app.get_one::<String>(":he_auth_pwd").map(|s| s.as_str()));
 
       let mut params = HashMap::new();
-      params.insert("username", app.value_of("he_auth_usr").unwrap().to_string());
-      params.insert("password", app.value_of("he_auth_pwd").unwrap().to_string());
+      params.insert("username", app.get_one::<String>("he_auth_usr").map(|s| s.as_str()));
+      params.insert("password", app.get_one::<String>("").map(|s| s.as_str()));
       c.post(req_url).form(&params)
     } else {
       c.post(req_url)

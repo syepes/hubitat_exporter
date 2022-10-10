@@ -1,6 +1,6 @@
 [package]
 name = "hubitat_exporter"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2021"
 authors = ["Sebastian YEPES <syepes@gmail.com>"]
 keywords = ["home-automation", "prometheus-exporter", "hubitat"]
@@ -12,29 +12,29 @@ readme = "README.md"
 
 
 [dependencies]
-reqwest = { version = "0.11.*", features = [
+reqwest = { version = "0.11", features = [
   "blocking",
   "json",
   "cookies",
   "multipart",
 ] }
-tokio = { version = "1.18.*", features = ["full"] }
-serde = { version = "1.0.*", features = ["derive"] }
-serde_json = { version = "1.0.*", features = ["raw_value"] }
-anyhow = "1.0.*"
-tiny_http = "0.11.*"
-convert_case = "0.5.*"
-openssl = { version = "0.10.*", features = ["vendored"] }
-clap = { version = "3.1.*", default-features = false, features = [
+tokio = { version = "1.21", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["raw_value"] }
+anyhow = "1.0"
+tiny_http = "0.12"
+convert_case = "0.6"
+openssl = { version = "0.10", features = ["vendored"] }
+clap = { version = "4.0", default-features = false, features = [
   "std",
   "color",
   "cargo",
   "env",
 ] }
-url = "2.*"
-log = "0.4.*"
-env_logger = "0.9.*"
-chrono = "0.4.*"
+url = "2"
+log = "0.4"
+env_logger = "0.9"
+chrono = "0.4"
 
 [dev-dependencies]
 clippy = { version = "*" }

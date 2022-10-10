@@ -66,6 +66,7 @@ pub struct DeviceInventory {
   pub display_name:       String,
 }
 
+#[allow(dead_code)]
 #[derive(Deserialize)]
 pub struct DeviceIDs {
   pub id: String,
