@@ -24,7 +24,7 @@ fn main() {
                             .arg(Arg::new("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).num_args(1))
                             .arg(Arg::new("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).num_args(1))
                             .arg(Arg::new("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).num_args(1))
-                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").default_value("true").required(false).num_args(1))
+                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").action(clap::ArgAction::SetTrue).default_missing_value("false").required(false))
                             .arg(Arg::new("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).num_args(1))
                             .arg(Arg::new("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).num_args(1))
                             .arg(Arg::new("v").short('v').action(clap::ArgAction::Count).required(false).help("Log verbosity (-v, -vv, -vvv...)"))
@@ -45,7 +45,7 @@ fn main() {
 
   let listener = app.get_one::<String>("listener").map(|s| s.as_str()).unwrap();
   if let Ok(server) = Server::http(listener) {
-    info!("started on http://{:?}", listener);
+    info!("started on http://{}", listener);
 
     if app.get_flag("he_dd") {
       info!("detailed mode is turned on");
