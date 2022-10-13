@@ -43,7 +43,7 @@ fn main() {
 
   let mut he = hub::HubInfo { ip: app.get_one::<String>("he_ip").map(|s| s.as_str()), auth_usr: None, auth_pwd: None, api_id: app.get_one::<String>("he_api_id").map(|s| s.as_str()), api_access_token: app.get_one::<String>("he_api_token").map(|s| s.as_str()), client: None };
 
-  let listener = app.get_one::<String>("listener").map(|s| s.as_str()).unwrap();
+  let listener = app.get_one::<String>("listener").unwrap();
   if let Ok(server) = Server::http(listener) {
     info!("started on http://{}", listener);
 
@@ -109,12 +109,12 @@ fn get_log(he: &mut hub::HubInfo, app: &ArgMatches) {
   if let Ok(c) = reqwest::blocking::Client::builder().user_agent(env!("CARGO_PKG_NAME")).cookie_store(true).danger_accept_invalid_certs(true).connection_verbose(true).build() {
     let req_url = format!("http://{he_ip}/login", he_ip = he.ip.unwrap());
 
-    let req: RequestBuilder = if app.get_flag("he_auth_usr") && app.get_flag("he_auth_pwd") {
-      debug!("Auth on {:?}/{:?}", app.get_one::<String>("he_auth_usr").map(|s| s.as_str()), app.get_one::<String>(":he_auth_pwd").map(|s| s.as_str()));
+    let req: RequestBuilder = if app.get_one::<String>("he_auth_usr").is_some() && app.get_one::<String>("he_auth_pwd").is_some() {
+      debug!("Auth on {:?}/{:?}", app.get_one::<String>("he_auth_usr").unwrap(), app.get_one::<String>("he_auth_pwd").unwrap());
 
       let mut params = HashMap::new();
-      params.insert("username", app.get_one::<String>("he_auth_usr").map(|s| s.as_str()));
-      params.insert("password", app.get_one::<String>("").map(|s| s.as_str()));
+      params.insert("username", app.get_one::<String>("he_auth_usr").unwrap());
+      params.insert("password", app.get_one::<String>("he_auth_pwd").unwrap());
       c.post(req_url).form(&params)
     } else {
       c.post(req_url)
