@@ -1,5 +1,5 @@
 # Workaround for QEmu bug when building for 32bit platforms on a 64bit host
-FROM --platform=$BUILDPLATFORM rust:latest as vendor
+FROM --platform=$BUILDPLATFORM rust:buster as vendor
 ARG BUILDPLATFORM
 ARG TARGETPLATFORM
 RUN echo "Running on: $BUILDPLATFORM / Building for $TARGETPLATFORM"
@@ -10,7 +10,7 @@ COPY ./Cargo.lock .
 COPY ./src src
 RUN mkdir .cargo && cargo vendor > .cargo/config.toml
 
-FROM rust:latest as builder
+FROM rust:buster as builder
 WORKDIR /app
 
 COPY --from=vendor /app/.cargo .cargo

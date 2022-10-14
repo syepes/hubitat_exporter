@@ -1,6 +1,6 @@
 [package]
 name = "hubitat_exporter"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 authors = ["Sebastian YEPES <syepes@gmail.com>"]
 keywords = ["home-automation", "prometheus-exporter", "hubitat"]
@@ -28,6 +28,9 @@ openssl = { version = "0.10", features = ["vendored"] }
 clap = { version = "4.0", default-features = false, features = [
   "std",
   "color",
+  "help",
+  "usage",
+  "suggestions",
   "cargo",
   "env",
 ] }
@@ -35,9 +38,6 @@ url = "2"
 log = "0.4"
 env_logger = "0.9"
 chrono = "0.4"
-
-[dev-dependencies]
-clippy = { version = "*" }
 
 [profile.dev]
 debug = 0

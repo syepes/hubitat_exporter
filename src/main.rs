@@ -21,12 +21,12 @@ fn main() {
                             .author(env!("CARGO_PKG_AUTHORS"))
                             .about(env!("CARGO_PKG_DESCRIPTION"))
                             .arg(Arg::new("listener").long("listener").env("LISTENER").default_value("0.0.0.0:8000").num_args(1))
-                            .arg(Arg::new("he_ip").short('h').long("hubitat_ip").env("HE_IP").required(true).num_args(1))
-                            .arg(Arg::new("he_api_id").short('i').long("hubitat_api_id").env("HE_API_ID").required(true).num_args(1))
-                            .arg(Arg::new("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").required(true).num_args(1))
-                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").action(clap::ArgAction::SetTrue).default_missing_value("false").required(false))
-                            .arg(Arg::new("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").required(false).num_args(1))
-                            .arg(Arg::new("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").requires("he_auth_usr").required(false).num_args(1))
+                            .arg(Arg::new("he_ip").short('i').long("hubitat_ip").env("HE_IP").help("Hubitat Hub IP").required(true).num_args(1))
+                            .arg(Arg::new("he_app_id").short('a').long("hubitat_app_id").env("HE_APP_ID").help("Hubitat APP ID").required(true).num_args(1))
+                            .arg(Arg::new("he_api_token").short('t').long("hubitat_api_access_token").env("HE_API_TOKEN").help("Hubitat API TOKEN").required(true).num_args(1))
+                            .arg(Arg::new("he_dd").short('d').long("hubitat_device_details").env("HE_DD").help("Add extra detailed labels").action(clap::ArgAction::SetTrue).default_missing_value("false").required(false))
+                            .arg(Arg::new("he_auth_usr").short('u').long("hubitat_auth_usr").env("HE_AUTH_USR").help("Hubitat Hub Username").required(false).num_args(1))
+                            .arg(Arg::new("he_auth_pwd").short('p').long("hubitat_auth_pwd").env("HE_AUTH_PWD").help("Hubitat Hub Password").requires("he_auth_usr").required(false).num_args(1))
                             .arg(Arg::new("v").short('v').action(clap::ArgAction::Count).required(false).help("Log verbosity (-v, -vv, -vvv...)"))
                             .get_matches();
 
