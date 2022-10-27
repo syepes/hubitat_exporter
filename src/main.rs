@@ -41,7 +41,7 @@ fn main() {
 
   env_logger::Builder::from_default_env().format(|buf, record| writeln!(buf, "{} {} {}:{} [{}] - {}", chrono::Local::now().format("%Y-%m-%dT%H:%M:%S"), record.module_path().unwrap_or("unknown"), record.file().unwrap_or("unknown"), record.line().unwrap_or(0), record.level(), record.args())).init();
 
-  let mut he = hub::HubInfo { ip: app.get_one::<String>("he_ip").map(|s| s.as_str()), auth_usr: None, auth_pwd: None, api_id: app.get_one::<String>("he_api_id").map(|s| s.as_str()), api_access_token: app.get_one::<String>("he_api_token").map(|s| s.as_str()), client: None };
+  let mut he = hub::HubInfo { ip: app.get_one::<String>("he_ip").map(|s| s.as_str()), auth_usr: None, auth_pwd: None, api_id: app.get_one::<String>("he_app_id").map(|s| s.as_str()), api_access_token: app.get_one::<String>("he_api_token").map(|s| s.as_str()), client: None };
 
   let listener = app.get_one::<String>("listener").unwrap();
   if let Ok(server) = Server::http(listener) {
