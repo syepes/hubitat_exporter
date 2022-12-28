@@ -75,14 +75,11 @@ fn build_metrics(hub_metrics: &Option<HashMap<String, String>>, devs: Result<Vec
   let mut metrics: String = "".to_owned();
 
   if let Some(d) = dev_inv {
-    match d.into_iter().nth(0) {
-      Some(d) => {
-        for (m, v) in hub_metrics.as_ref().unwrap() {
-          let m = &format!("hub_{metric}{{hub_name=\"{hub_name}\",hub_location_name=\"{hub_location_name}\"}} {val}\n", metric = m.to_case(Case::Snake), hub_name = d.1.hub_name, hub_location_name = d.1.location_name, val = v);
-          metrics.push_str(m);
-        }
-      },
-      _ => {},
+    if let Some(d) = d.iter().next() {
+      for (m, v) in hub_metrics.as_ref().unwrap() {
+        let m = &format!("hub_{metric}{{hub_name=\"{hub_name}\",hub_location_name=\"{hub_location_name}\"}} {val}\n", metric = m.to_case(Case::Snake), hub_name = d.1.hub_name, hub_location_name = d.1.location_name, val = v);
+        metrics.push_str(m);
+      }
     }
   }
 
@@ -163,11 +160,8 @@ fn get_hub_metrics(he: &mut hub::HubInfo) -> Option<HashMap<String, String>> {
       Ok(r) => {
         if r.status().is_success() {
           debug!("resp:{:#?}", r);
-          match r.text() {
-            Ok(body) => {
-              hub_metrics.insert("cpu_load_1min".to_string(), body.to_string());
-            },
-            Err(_) => (),
+          if let Ok(body) = r.text() {
+            hub_metrics.insert("cpu_load_1min".to_string(), body);
           }
         } else {
           error!("request get failed: {:?}", r);
@@ -183,11 +177,8 @@ fn get_hub_metrics(he: &mut hub::HubInfo) -> Option<HashMap<String, String>> {
       Ok(r) => {
         if r.status().is_success() {
           debug!("resp:{:#?}", r);
-          match r.text() {
-            Ok(body) => {
-              hub_metrics.insert("free_os_memory".to_string(), body.to_string());
-            },
-            Err(_) => (),
+          if let Ok(body) = r.text() {
+            hub_metrics.insert("free_os_memory".to_string(), body);
           }
         } else {
           error!("request get failed: {:?}", r);
@@ -203,11 +194,8 @@ fn get_hub_metrics(he: &mut hub::HubInfo) -> Option<HashMap<String, String>> {
       Ok(r) => {
         if r.status().is_success() {
           debug!("resp:{:#?}", r);
-          match r.text() {
-            Ok(body) => {
-              hub_metrics.insert("database_size".to_string(), body.to_string());
-            },
-            Err(_) => (),
+          if let Ok(body) = r.text() {
+            hub_metrics.insert("database_size".to_string(), body);
           }
         } else {
           error!("request get failed: {:?}", r);
@@ -223,11 +211,8 @@ fn get_hub_metrics(he: &mut hub::HubInfo) -> Option<HashMap<String, String>> {
       Ok(r) => {
         if r.status().is_success() {
           debug!("resp:{:#?}", r);
-          match r.text() {
-            Ok(body) => {
-              hub_metrics.insert("temperature".to_string(), body.to_string());
-            },
-            Err(_) => (),
+          if let Ok(body) = r.text() {
+            hub_metrics.insert("temperature".to_string(), body);
           }
         } else {
           error!("request get failed: {:?}", r);
