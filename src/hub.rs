@@ -103,9 +103,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "acceleration" =>
+        if name.to_ascii_lowercase() == "acceleration" =>
       {
-        if current_value == "active" {
+        if current_value.to_ascii_lowercase() == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -114,9 +114,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "alarm" =>
+        if name.to_ascii_lowercase() == "alarm" =>
       {
-        if current_value == "off" || current_value == "inactive" {
+        if current_value.to_ascii_lowercase() == "off" || current_value.to_ascii_lowercase() == "inactive" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
@@ -125,9 +125,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "presence" =>
+        if name.to_ascii_lowercase() == "presence" =>
       {
-        if current_value == "present" {
+        if current_value.to_ascii_lowercase() == "present" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -136,9 +136,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "presence" =>
+        if name.to_ascii_lowercase() == "presence" =>
       {
-        if current_value == "present" {
+        if current_value.to_ascii_lowercase() == "present" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -147,9 +147,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "switch" =>
+        if name.to_ascii_lowercase() == "switch" =>
       {
-        if current_value == "on" {
+        if current_value.to_ascii_lowercase() == "on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -158,9 +158,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "button" =>
+        if name.to_ascii_lowercase() == "button" =>
       {
-        if current_value == "pushed" {
+        if current_value.to_ascii_lowercase() == "pushed" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -169,9 +169,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "carbonMonoxide" =>
+        if name.to_ascii_lowercase() == "carbonMonoxide" =>
       {
-        if current_value == "detected" {
+        if current_value.to_ascii_lowercase() == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -180,9 +180,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "status" =>
+        if name.to_ascii_lowercase() == "status" =>
       {
-        if current_value == "playing" {
+        if current_value.to_ascii_lowercase() == "playing" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -191,9 +191,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "consumableStatus" =>
+        if name.to_ascii_lowercase() == "consumableStatus" =>
       {
-        if current_value == "good" {
+        if current_value.to_ascii_lowercase() == "good" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -202,9 +202,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "contact" =>
+        if name.to_ascii_lowercase() == "contact" =>
       {
-        if current_value == "closed" {
+        if current_value.to_ascii_lowercase() == "closed" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
@@ -213,9 +213,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "indicatorStatus" =>
+        if name.to_ascii_lowercase() == "indicatorStatus" =>
       {
-        if current_value == "when on" {
+        if current_value.to_ascii_lowercase() == "when on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -224,9 +224,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "lock" =>
+        if name.to_ascii_lowercase() == "lock" =>
       {
-        if current_value == "locked" {
+        if current_value.to_ascii_lowercase() == "locked" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
@@ -235,9 +235,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "motion" =>
+        if name.to_ascii_lowercase() == "motion" =>
       {
-        if current_value == "active" {
+        if current_value.to_ascii_lowercase() == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -246,9 +246,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "shock" =>
+        if name.to_ascii_lowercase() == "shock" =>
       {
-        if current_value == "detected" {
+        if current_value.to_ascii_lowercase() == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -257,9 +257,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "mute" =>
+        if name.to_ascii_lowercase() == "mute" =>
       {
-        if current_value == "muted" {
+        if current_value.to_ascii_lowercase() == "muted" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -268,9 +268,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "sleeping" =>
+        if name.to_ascii_lowercase() == "sleeping" =>
       {
-        if current_value == "sleeping" {
+        if current_value.to_ascii_lowercase() == "sleeping" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -279,9 +279,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "smoke" =>
+        if name.to_ascii_lowercase() == "smoke" =>
       {
-        if current_value == "detected" {
+        if current_value.to_ascii_lowercase() == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -290,9 +290,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "sound" =>
+        if name.to_ascii_lowercase() == "sound" =>
       {
-        if current_value == "detected" {
+        if current_value.to_ascii_lowercase() == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -301,9 +301,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "tamper" =>
+        if name.to_ascii_lowercase() == "tamper" =>
       {
-        if current_value == "detected" {
+        if current_value.to_ascii_lowercase() == "detected" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -312,9 +312,47 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "thermostatMode" =>
+        if name.to_ascii_lowercase() == "door" =>
       {
-        if current_value == "off" {
+        if current_value.to_ascii_lowercase() == "closed" {
+          Some("0".to_string())
+        } else if current_value.to_ascii_lowercase() == "closing" {
+          Some("1".to_string())
+        } else if current_value.to_ascii_lowercase() == "open" {
+          Some("2".to_string())
+        } else if current_value.to_ascii_lowercase() == "opening" {
+          Some("3".to_string())
+        } else if current_value.to_ascii_lowercase() == "unknown" {
+          Some("4".to_string())
+        } else {
+          None
+        }
+      },
+      Self { ref name,
+             current_value,
+             .. }
+        if name.to_ascii_lowercase() == "thermostatMode" =>
+      {
+        if current_value.to_ascii_lowercase() == "off" {
+          Some("0".to_string())
+        } else if current_value.to_ascii_lowercase() == "auto" {
+          Some("1".to_string())
+        } else if current_value.to_ascii_lowercase() == "heat" {
+          Some("2".to_string())
+        } else if current_value.to_ascii_lowercase() == "cool" {
+          Some("3".to_string())
+        } else if current_value.to_ascii_lowercase() == "emergency heat" {
+          Some("4".to_string())
+        } else {
+          None
+        }
+      },
+      Self { ref name,
+             current_value,
+             .. }
+        if name.to_ascii_lowercase() == "thermostatFanMode" =>
+      {
+        if current_value.to_ascii_lowercase() == "off" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
@@ -323,9 +361,32 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "thermostatFanMode" =>
+        if name.to_ascii_lowercase() == "thermostatOperatingState" =>
       {
-        if current_value == "off" {
+        if current_value.to_ascii_lowercase() == "idle" {
+          Some("0".to_string())
+        } else if current_value.to_ascii_lowercase() == "heating" {
+          Some("1".to_string())
+        } else if current_value.to_ascii_lowercase() == "cooling" {
+          Some("2".to_string())
+        } else if current_value.to_ascii_lowercase() == "pending heat" {
+          Some("3".to_string())
+        } else if current_value.to_ascii_lowercase() == "pending cool" {
+          Some("4".to_string())
+        } else if current_value.to_ascii_lowercase() == "vent economizer" {
+          Some("5".to_string())
+        } else if current_value.to_ascii_lowercase() == "fan only" {
+          Some("6".to_string())
+        } else {
+          None
+        }
+      },
+      Self { ref name,
+             current_value,
+             .. }
+        if name.to_ascii_lowercase() == "thermostatSetpointMode" =>
+      {
+        if current_value.to_ascii_lowercase() == "followSchedule" {
           Some("0".to_string())
         } else {
           Some("1".to_string())
@@ -334,9 +395,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "thermostatOperatingState" =>
+        if name.to_ascii_lowercase() == "timedSession" =>
       {
-        if current_value == "heating" {
+        if current_value.to_ascii_lowercase() == "running" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -345,20 +406,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "thermostatSetpointMode" =>
+        if name.to_ascii_lowercase() == "touch" =>
       {
-        if current_value == "followSchedule" {
-          Some("0".to_string())
-        } else {
-          Some("1".to_string())
-        }
-      },
-      Self { ref name,
-             current_value,
-             .. }
-        if name == "timedSession" =>
-      {
-        if current_value == "running" {
+        if current_value.to_ascii_lowercase() == "touched" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -367,9 +417,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "touch" =>
+        if name.to_ascii_lowercase() == "valve" =>
       {
-        if current_value == "touched" {
+        if current_value.to_ascii_lowercase() == "open" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -378,9 +428,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "valve" =>
+        if name.to_ascii_lowercase() == "camera" =>
       {
-        if current_value == "open" {
+        if current_value.to_ascii_lowercase() == "on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -389,9 +439,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "camera" =>
+        if name.to_ascii_lowercase() == "water" =>
       {
-        if current_value == "on" {
+        if current_value.to_ascii_lowercase() == "wet" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -400,9 +450,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "water" =>
+        if name.to_ascii_lowercase() == "windowShade" =>
       {
-        if current_value == "wet" {
+        if current_value.to_ascii_lowercase() == "opening" || current_value.to_ascii_lowercase() == "partially open" || current_value.to_ascii_lowercase() == "open" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -411,9 +461,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "windowShade" =>
+        if name.to_ascii_lowercase() == "optimisation" =>
       {
-        if current_value == "opening" || current_value == "partially open" || current_value == "open" {
+        if current_value.to_ascii_lowercase() == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -422,9 +472,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "optimisation" =>
+        if name.to_ascii_lowercase() == "windowFunction" =>
       {
-        if current_value == "active" {
+        if current_value.to_ascii_lowercase() == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -433,9 +483,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "windowFunction" =>
+        if name.to_ascii_lowercase() == "rain" =>
       {
-        if current_value == "active" {
+        if current_value.to_ascii_lowercase() == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -444,9 +494,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "rain" =>
+        if name.to_ascii_lowercase() == "rainHeavy" =>
       {
-        if current_value == "active" {
+        if current_value.to_ascii_lowercase() == "active" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -455,20 +505,9 @@ impl DeviceAttribute {
       Self { ref name,
              current_value,
              .. }
-        if name == "rainHeavy" =>
+        if name.to_ascii_lowercase() == "heatAlarm" =>
       {
-        if current_value == "active" {
-          Some("1".to_string())
-        } else {
-          Some("0".to_string())
-        }
-      },
-      Self { ref name,
-             current_value,
-             .. }
-        if name == "heatAlarm" =>
-      {
-        if current_value == "overheat" {
+        if current_value.to_ascii_lowercase() == "overheat" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
@@ -485,8 +524,8 @@ impl DeviceAttribute {
           None
         }
       },
-      Self { ref current_value, .. } if current_value == "on" => {
-        if current_value == "on" {
+      Self { ref current_value, .. } if current_value.to_ascii_lowercase() == "on" => {
+        if current_value.to_ascii_lowercase() == "on" {
           Some("1".to_string())
         } else {
           Some("0".to_string())
