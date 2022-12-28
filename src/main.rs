@@ -53,13 +53,16 @@ fn main() {
     }
 
     for request in server.incoming_requests() {
+      let hub_metrics = get_hub_metrics(&mut he);
+      trace!("hub_metrics:{:#?}", hub_metrics);
+
       let dev_inv = get_device_inventory(&mut he, &app);
       trace!("dev_inv:{:#?}", dev_inv);
 
       let devs = get_device_details(&he, get_device_ids(&he));
       trace!("devs:{:#?}", devs);
 
-      let m = build_metrics(devs, &dev_inv);
+      let m = build_metrics(&hub_metrics, devs, &dev_inv);
       let response = Response::from_string(m);
       let _ = request.respond(response);
     }
@@ -68,8 +71,20 @@ fn main() {
   }
 }
 
-fn build_metrics(devs: Result<Vec<hub::Device>, anyhow::Error>, dev_inv: &Option<HashMap<String, hub::DeviceInventory>>) -> String {
+fn build_metrics(hub_metrics: &Option<HashMap<String, String>>, devs: Result<Vec<hub::Device>, anyhow::Error>, dev_inv: &Option<HashMap<String, hub::DeviceInventory>>) -> String {
   let mut metrics: String = "".to_owned();
+
+  if let Some(d) = dev_inv {
+    match d.into_iter().nth(0) {
+      Some(d) => {
+        for (m, v) in hub_metrics.as_ref().unwrap() {
+          let m = &format!("hub_{metric}{{hub_name=\"{hub_name}\",hub_location_name=\"{hub_location_name}\"}} {val}\n", metric = m.to_case(Case::Snake), hub_name = d.1.hub_name, hub_location_name = d.1.location_name, val = v);
+          metrics.push_str(m);
+        }
+      },
+      _ => {},
+    }
+  }
 
   if let Ok(dev_details) = devs {
     for i in dev_details.iter() {
@@ -136,6 +151,96 @@ fn get_log(he: &mut hub::HubInfo, app: &ArgMatches) {
         error!("request post failed: {:?}", e);
       },
     }
+  }
+}
+
+fn get_hub_metrics(he: &mut hub::HubInfo) -> Option<HashMap<String, String>> {
+  let mut hub_metrics = HashMap::new();
+
+  if let Some(c) = &he.client {
+    let req_url = format!("http://{he_ip}:8080/hub/advanced/cpu1min", he_ip = he.ip.unwrap());
+    match c.get(req_url).send() {
+      Ok(r) => {
+        if r.status().is_success() {
+          debug!("resp:{:#?}", r);
+          match r.text() {
+            Ok(body) => {
+              hub_metrics.insert("cpu_load_1min".to_string(), body.to_string());
+            },
+            Err(_) => (),
+          }
+        } else {
+          error!("request get failed: {:?}", r);
+        }
+      },
+      Err(e) => {
+        error!("request get failed: {:?}", e);
+      },
+    }
+
+    let req_url = format!("http://{he_ip}:8080/hub/advanced/freeOSMemory", he_ip = he.ip.unwrap());
+    match c.get(req_url).send() {
+      Ok(r) => {
+        if r.status().is_success() {
+          debug!("resp:{:#?}", r);
+          match r.text() {
+            Ok(body) => {
+              hub_metrics.insert("free_os_memory".to_string(), body.to_string());
+            },
+            Err(_) => (),
+          }
+        } else {
+          error!("request get failed: {:?}", r);
+        }
+      },
+      Err(e) => {
+        error!("request get failed: {:?}", e);
+      },
+    }
+
+    let req_url = format!("http://{he_ip}:8080/hub/advanced/databaseSize", he_ip = he.ip.unwrap());
+    match c.get(req_url).send() {
+      Ok(r) => {
+        if r.status().is_success() {
+          debug!("resp:{:#?}", r);
+          match r.text() {
+            Ok(body) => {
+              hub_metrics.insert("database_size".to_string(), body.to_string());
+            },
+            Err(_) => (),
+          }
+        } else {
+          error!("request get failed: {:?}", r);
+        }
+      },
+      Err(e) => {
+        error!("request get failed: {:?}", e);
+      },
+    }
+
+    let req_url = format!("http://{he_ip}:8080/hub/advanced/internalTempCelsius", he_ip = he.ip.unwrap());
+    match c.get(req_url).send() {
+      Ok(r) => {
+        if r.status().is_success() {
+          debug!("resp:{:#?}", r);
+          match r.text() {
+            Ok(body) => {
+              hub_metrics.insert("temperature".to_string(), body.to_string());
+            },
+            Err(_) => (),
+          }
+        } else {
+          error!("request get failed: {:?}", r);
+        }
+      },
+      Err(e) => {
+        error!("request get failed: {:?}", e);
+      },
+    }
+
+    Some(hub_metrics)
+  } else {
+    None
   }
 }
 
